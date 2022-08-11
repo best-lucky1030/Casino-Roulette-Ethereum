@@ -19,6 +19,10 @@
     "@openzeppelin/contracts": "^4.7.2",
     "@truffle/hdwallet-provider": "^2.0.13",
     "dotenv": "^16.0.1",
-    "openzeppelin-solidity": "^4.6.0"
+    "eip-712": "^1.0.0",
+    "eth-permit": "^0.2.1",
+    "ethereumjs-util": "^7.1.5",
+    "openzeppelin-solidity": "^4.6.0",
+    "web3-utils": "^1.7.5"
   }
 }
