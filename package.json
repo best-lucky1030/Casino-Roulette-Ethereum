@@ -18,10 +18,13 @@
   "dependencies": {
     "@openzeppelin/contracts": "^4.7.2",
     "@truffle/hdwallet-provider": "^2.0.13",
+    "bip39": "^3.0.4",
     "dotenv": "^16.0.1",
     "eip-712": "^1.0.0",
     "eth-permit": "^0.2.1",
     "ethereumjs-util": "^7.1.5",
+    "ethereumjs-wallet": "^1.0.2",
+    "lodash": "^4.17.21",
     "openzeppelin-solidity": "^4.6.0",
     "web3-utils": "^1.7.5"
   }
