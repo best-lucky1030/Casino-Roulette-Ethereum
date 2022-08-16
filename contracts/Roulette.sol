@@ -41,6 +41,8 @@ contract Roulette is ERC20 {
     1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36
   ];
 
+  event BetResult(address from, uint256 randomResult, uint256 payout);
+
   constructor(address _bet_token) public ERC20("SAKURA_V1", "SV1") {
     bet_token = _bet_token;
 
@@ -99,7 +101,9 @@ contract Roulette is ERC20 {
 
     collectToken(msg.sender, amount, deadline, v, r, s);
 
-    bytes32 requestId = getRandomNumber(randomSeed);
+    // TODO: Use Chainlink VRF for retrieving requestId
+    // bytes32 requestId = getRandomNumber(randomSeed);
+    bytes32 requestId = s;
     
     _rollRequestsSender[requestId] = msg.sender;
     _rollRequestsCompleted[requestId] = false;
@@ -137,6 +141,7 @@ contract Roulette is ERC20 {
         continue;
       }
       if (betType == BetType.Color && uint8(COLORS[result]) == betValue) {
+        emit BetResult(_rollRequestsSender[requestId], result, betValue);
         amount += betAmount * 2;
         continue;
       }
@@ -162,6 +167,8 @@ contract Roulette is ERC20 {
     if (amount > 0) {
       IERC20(bet_token).transfer(_rollRequestsSender[requestId], amount);
     }
+
+    emit BetResult(_rollRequestsSender[requestId], result, amount);
   }
   
   function getMaxBet() public view returns(uint) {
