@@ -1,10 +1,12 @@
 .PHONY: test run install console migrate compile
 
+file := .mnemonic
+MNEMONIC := $(shell cat ${file})
 install:
 	npm install
 
 run:
-	./node_modules/.bin/ganache-cli -e 50000 --port 8545
+	./node_modules/.bin/ganache-cli -e 5000 --port 8545 --mnemonic "$(MNEMONIC)"
 
 console:
 	./node_modules/.bin/truffle console --network ganache
