@@ -1,4 +1,6 @@
 node_modules/
+.idea/
 .env
 build/
-.idea/
+dist/
+contracts/_Roulette.sol
