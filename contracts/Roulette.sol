@@ -230,37 +230,37 @@ contract Roulette is VRFConsumerBase, ERC20, Ownable {
 
     uint256 amount = 0;
     for (uint index = 0; index < bets.length; index++) {
-        BetType betType = BetType(bets[index][0]);
-        uint8 betValue = uint8(bets[index][1]);
-        uint256 betAmount = bets[index][2];
+      BetType betType = BetType(bets[index][0]);
+      uint8 betValue = uint8(bets[index][1]);
+      uint256 betAmount = bets[index][2];
 
-        if (betType == BetType.Number && result == betValue) {
-            amount += betAmount * 36;
-            continue;
-        }
-        if (result == 0) {
-            continue;
-        }
-        if (betType == BetType.Color && uint8(COLORS[result]) == betValue) {
-            amount += betAmount * 2;
-            continue;
-        }
-        if (betType == BetType.Even && result % 2 == betValue) {
-            amount += betAmount * 2;
-            continue;
-        }
-        if (betType == BetType.Column && result % 3 == betValue) {
-            amount += betAmount * 3;
-            continue;
-        }
-        if (betType == BetType.Dozen && betValue * 12 < result && result <= (betValue + 1) * 12) {
-            amount += betAmount * 3;
-            continue;
-        }
-        if (betType == BetType.Half && (betValue != 0 ? (result > 19) : (result <= 19))) {
-            amount += betAmount * 2;
-            continue;
-        }
+      if (betType == BetType.Number && result == betValue) {
+        amount += betAmount * 36;
+        continue;
+      }
+      if (result == 0) {
+        continue;
+      }
+      if (betType == BetType.Color && uint8(COLORS[result]) == betValue) {
+        amount += betAmount * 2;
+        continue;
+      }
+      if (betType == BetType.Even && result % 2 == betValue) {
+        amount += betAmount * 2;
+        continue;
+      }
+      if (betType == BetType.Column && result % 3 == betValue) {
+        amount += betAmount * 3;
+        continue;
+      }
+      if (betType == BetType.Dozen && betValue * 12 < result && result <= (betValue + 1) * 12) {
+        amount += betAmount * 3;
+        continue;
+      }
+      if (betType == BetType.Half && (betValue != 0 ? (result > 19) : (result <= 19))) {
+        amount += betAmount * 2;
+        continue;
+      }
     }
 
     _rollRequestsResults[requestId] = result;
