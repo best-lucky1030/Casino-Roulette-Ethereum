@@ -10,7 +10,7 @@ const { ecsign } = require('ethereumjs-util')
 
 const PERMIT_TYPEHASH = keccak256(
   toUtf8Bytes(
-    'Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)',
+    'Permit(address holder,address spender,uint256 nonce,uint256 expiry,bool allowed)',
   ),
 )
 
@@ -33,7 +33,7 @@ function getDomainSeparator(name, tokenAddress) {
   )
 }
 
-async function getApprovalDigest(token, approve, nonce, deadline) {
+async function getApprovalDigest(token, approve, nonce, expiry) {
   const name = await token.name()
   const DOMAIN_SEPARATOR = getDomainSeparator(name, token.address)
   return keccak256(
@@ -45,14 +45,14 @@ async function getApprovalDigest(token, approve, nonce, deadline) {
         DOMAIN_SEPARATOR,
         keccak256(
           defaultAbiCoder.encode(
-            ['bytes32', 'address', 'address', 'uint256', 'uint256', 'uint256'],
+            ['bytes32', 'address', 'address', 'uint256', 'uint256', 'bool'],
             [
               PERMIT_TYPEHASH,
-              approve.owner,
+              approve.holder,
               approve.spender,
-              approve.value,
               nonce,
-              deadline,
+              expiry,
+              'true',
             ],
           ),
         ),
@@ -65,20 +65,19 @@ module.exports = async function getPermitArgs({
   token,
   spenderAddress,
   owner,
-  amount,
-  deadline = MaxUint256,
+  expiry = MaxUint256.toString(),
 }) {
-  const nonce = await token.nonces(owner.address)
+  const nonce = (await token.nonces(owner.address)).toString()
   const digest = await getApprovalDigest(
     token,
-    { owner: owner.address, spender: spenderAddress, value: amount },
-    nonce.toString(),
-    deadline.toString(),
+    { holder: owner.address, spender: spenderAddress },
+    nonce,
+    expiry,
   )
   const { v, r, s } = ecsign(
     Buffer.from(digest.slice(2), 'hex'),
     Buffer.from(owner.privateKey.slice(2), 'hex'),
   )
 
-  return [deadline, v, r, s, { from: owner.address }]
+  return [nonce, expiry, true, `${v}`, r, s, { from: owner.address }]
 }

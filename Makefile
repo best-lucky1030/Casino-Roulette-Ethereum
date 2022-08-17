@@ -6,13 +6,13 @@ install:
 	npm install
 
 run:
-	./node_modules/.bin/ganache-cli -e 5000 --port 8545 --mnemonic "$(MNEMONIC)"
+	./node_modules/.bin/ganache-cli -e 5000 --port 8545 --mnemonic "$(MNEMONIC)" --chainId 1
 
 console:
 	./node_modules/.bin/truffle console --network ganache
 
 migrate:
-	./node_modules/.bin/truffle migrate --network ganache --reset
+	INITIAL_LIQUIDITY='100000' ./node_modules/.bin/truffle migrate --network ganache --reset
 
 compile:
 	./node_modules/.bin/truffle compile
@@ -20,16 +20,13 @@ compile:
 flatten:
 	./node_modules/.bin/truffle-flattener ./contracts/Roulette.sol > ./contracts/_Roulette.sol
 
-test:
+test: compile
 	./node_modules/.bin/truffle test --network ganache
 
-deploy-live:
-	./node_modules/.bin/truffle deploy --network live
-
-deploy-kovan:
-	NETWORK=kovan make deploy-live
+vrfsigner:
+	./node_modules/.bin/truffle exec ./scripts/vrf-signer-mock.js --network ganache
 
 publish:
 	make compile
-	node package-builder.js
+	node scripts/package-builder.js
 	npm publish --access public
