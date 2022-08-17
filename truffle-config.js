@@ -1,8 +1,17 @@
 require('dotenv').config()
-const HDWalletProvider = require("@truffle/hdwallet-provider");
+const networks = require('./networks')
+const HDWalletProvider = require('@truffle/hdwallet-provider')
+let network = {};
+
+if (process.env.NETWORK) {
+  network = networks.find((network) => network.network == process.env.NETWORK)
+  if (!network) {
+    throw 'Invalid network name'
+  }
+}
 
 module.exports = {
-  // Uncommenting the defaults below 
+  // Uncommenting the defaults below
   // provides for an easier quick-start with Ganache.
   // You can also follow this format for other networks;
   // see <http://truffleframework.com/docs/advanced/configuration>
@@ -10,26 +19,25 @@ module.exports = {
   //
   networks: {
     ganache: {
-      host: "127.0.0.1",
+      host: '127.0.0.1',
       port: 8545,
-      network_id: "*" 
+      network_id: '*',
     },
-    ropsten: {
-      provider: function() {
-        return new HDWalletProvider(process.env.ROPSTEN_MNEMONIC, process.env.ROPSTEN_API)
+    live: {
+      provider: function () {
+        return new HDWalletProvider(
+          process.env.DEPLOY_MNEMONIC,
+          process.env.DEPLOY_API,
+        )
       },
-      network_id: 3,
-      gas: 4000000
-    }
-  //  test: {
-  //    host: "127.0.0.1",
-  //    port: 7545,
-  //    network_id: "*"
-  //  }
+      chain_id: network.chain_id,
+      network_id: network.network,
+      gas: 8000000,
+    },
   },
   compilers: {
     solc: {
-      version: "^0.8.0",
+      version: '^0.8.0',
     },
   },
-};
+}

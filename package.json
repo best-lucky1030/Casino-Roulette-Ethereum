@@ -1,8 +1,8 @@
 {
   "name": "roulette",
-  "version": "1.0.0",
-  "description": "",
-  "main": "truffle-config.js",
+  "version": "0.2.0",
+  "description": "Roulette contract data for SakuraCasino",
+  "main": "dist/index.js",
   "directories": {
     "test": "test"
   },
@@ -13,7 +13,8 @@
   "license": "ISC",
   "devDependencies": {
     "ganache-cli": "^6.12.2",
-    "truffle": "^5.5.25"
+    "truffle": "^5.5.25",
+    "truffle-flattener": "^1.6.0"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.7.2",
